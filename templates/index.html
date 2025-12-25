@@ -2,87 +2,34 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Dijkstra Pathfinding</title>
-    <style>
-        body { text-align: center; font-family: Arial, sans-serif; }
-        .grid-container { display: inline-grid; grid-template-columns: repeat(10, 40px); }
-        .cell { width: 40px; height: 40px; border: 1px solid black; text-align: center; vertical-align: middle; font-size: 14px; }
-        .wall { background-color: black; }
-        .start { background-color: green; }
-        .goal { background-color: red; }
-        .path { background-color: yellow; }
-    </style>
+    <title>DSA Algorithm Visualizer</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="icon" type="image/jpeg" href="{{ url_for('assets_file', filename='favicon.jpg') }}">
 </head>
 <body>
-    <h1>Click on a Start and Goal Cell</h1>
+
+    <h1>Dijkstra Pathfinding Visualizer</h1>
+
+    <div class="controls">
+        <select id="algorithm">
+            <option value="dijkstra">Dijkstra</option>
+            <option value="astar">A* Search</option>
+            <option value="bfs">BFS</option>
+            <option value="dfs">DFS</option>
+        </select>
+
+        <button onclick="runAlgorithm()">Run</button>
+        <button onclick="resetGrid()">Reset</button>
+    </div>
+
     <div class="grid-container" id="grid"></div>
-    <button onclick="resetGrid()">Reset Grid</button>
 
     <script>
         const gridData = {{ grid|tojson }};
-        let start = null, goal = null;
-
-        function createGrid() {
-            const gridContainer = document.getElementById("grid");
-            gridContainer.innerHTML = "";
-
-            for (let r = 0; r < gridData.length; r++) {
-                for (let c = 0; c < gridData[r].length; c++) {
-                    const cell = document.createElement("div");
-                    cell.classList.add("cell");
-                    cell.dataset.row = r;
-                    cell.dataset.col = c;
-
-                    if (gridData[r][c] === "wall") {
-                        cell.classList.add("wall");
-                    }
-
-                    cell.onclick = () => selectCell(cell, r, c);
-                    gridContainer.appendChild(cell);
-                }
-            }
-        }
-
-        function selectCell(cell, row, col) {
-            if (!start) {
-                start = [row, col];
-                cell.classList.add("start");
-            } else if (!goal) {
-                goal = [row, col];
-                cell.classList.add("goal");
-                findPath();
-            }
-        }
-
-        function findPath() {
-            fetch("/find_path", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ start, goal })
-            })
-            .then(response => response.json())
-            .then(data => highlightPath(data.path));
-        }
-
-        function highlightPath(path) {
-            path.forEach(([r, c]) => {
-                const cells = document.querySelectorAll(".cell");
-                cells.forEach(cell => {
-                    if (parseInt(cell.dataset.row) === r && parseInt(cell.dataset.col) === c) {
-                        cell.classList.add("path");
-                    }
-                });
-            });
-        }
-
-        function resetGrid() {
-            start = null;
-            goal = null;
-            createGrid();
-        }
-
-        createGrid();
     </script>
+
+    <script src="{{ url_for('static', filename='js/grid.js') }}"></script>
+
 </body>
 </html>
