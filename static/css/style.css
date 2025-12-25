@@ -80,3 +80,127 @@ select {
 .path {
     background: #fde047;
 }
+
+.visited {
+    background: #38bdf8; /* blue */
+}
+
+.bfs { background: #38bdf8; }        /* blue */
+.dfs { background: #a855f7; }        /* purple */
+.dijkstra { background: #22c55e; }   /* green */
+.astar { background: #f97316; }      /* orange */
+
+
+#graphCanvas {
+    margin-top: 20px;
+    background: #020617;
+    border-radius: 8px;
+}
+
+.info-panel {
+    max-width: 800px;
+    margin: 30px auto;
+    padding: 20px;
+    background: #020617;
+    border-radius: 10px;
+    text-align: left;
+    color: #e5e7eb;
+}
+
+.info-panel h2 {
+    color: #38bdf8;
+    margin-bottom: 10px;
+}
+
+.info-panel h3 {
+    margin-top: 15px;
+    color: #a5b4fc;
+}
+
+.info-panel pre {
+    background: #0f172a;
+    padding: 12px;
+    border-radius: 6px;
+    overflow-x: auto;
+}
+
+.ds-panel {
+    max-width: 400px;
+    margin: 40px auto;
+    padding: 20px;
+    background: #020617;
+    border-radius: 10px;
+}
+
+#stackContainer {
+    margin-top: 20px;
+    border: 2px solid #64748b;
+    min-height: 240px;
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+    padding: 10px;
+}
+
+.stack-item {
+    width: 80%;
+    margin: 5px 0;
+    padding: 10px;
+    background: #38bdf8;
+    color: black;
+    font-weight: bold;
+    text-align: center;
+    border-radius: 6px;
+}
+
+#queueContainer {
+    margin-top: 20px;
+    border: 2px solid #64748b;
+    min-height: 100px;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    gap: 10px;
+    overflow-x: auto;
+}
+
+.queue-item {
+    min-width: 60px;
+    padding: 10px;
+    background: #f97316;
+    color: black;
+    font-weight: bold;
+    text-align: center;
+    border-radius: 6px;
+}
+
+#llContainer {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    overflow-x: auto;
+}
+
+.ll-node {
+    min-width: 70px;
+    padding: 10px;
+    background: #22c55e;
+    color: black;
+    font-weight: bold;
+    text-align: center;
+    border-radius: 6px;
+    position: relative;
+}
+
+.ll-arrow {
+    font-size: 24px;
+    color: #e5e7eb;
+}
+
+#treeCanvas {
+    margin-top: 20px;
+    background: #020617;
+    border-radius: 8px;
+    border: 1px solid #64748b;
+}

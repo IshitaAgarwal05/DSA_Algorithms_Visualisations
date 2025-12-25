@@ -4,32 +4,129 @@
     <meta charset="UTF-8">
     <title>DSA Algorithm Visualizer</title>
 
+    <!-- Main CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <link rel="icon" type="image/jpeg" href="{{ url_for('assets_file', filename='favicon.jpg') }}">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/jpeg"
+          href="{{ url_for('static', filename='assets/favicon.jpg') }}">
 </head>
 <body>
 
-    <h1>Dijkstra Pathfinding Visualizer</h1>
+    <h1>DSA Algorithm Visualizer</h1>
 
+    <!-- ================= CONTROLS ================= -->
     <div class="controls">
-        <select id="algorithm">
-            <option value="dijkstra">Dijkstra</option>
+        <select id="mode" onchange="switchMode()">
+            <option value="grid">Grid (Pathfinding)</option>
+            <option value="graph">Graph (MST)</option>
+        </select>
+
+        <select id="algorithm" onchange="updateInfoPanel()">
+            <!-- <option value="dijkstra">Dijkstra</option>
             <option value="astar">A* Search</option>
             <option value="bfs">BFS</option>
-            <option value="dfs">DFS</option>
+            <option value="dfs">DFS</option> -->
         </select>
 
         <button onclick="runAlgorithm()">Run</button>
+        <button onclick="compareAlgorithms()">Compare All</button>
+
+        <button onclick="runPrim()">Run Prim</button>
+        <button onclick="runKruskal()">Run Kruskal</button>
+
+
         <button onclick="resetGrid()">Reset</button>
     </div>
 
+
+    <!-- ================= GRID MODE ================= -->
     <div class="grid-container" id="grid"></div>
 
+    <!-- ================= GRAPH MODE ================= -->
+    <canvas id="graphCanvas"
+            width="600"
+            height="400"
+            style="border:1px solid #64748b; display:none;">
+    </canvas>
+
+    <!-- ================= THEORY PANEL ================= -->
+    <div id="infoPanel" class="info-panel">
+        <h2 id="algoTitle">Algorithm Info</h2>
+
+        <p id="algoDesc">
+            Select an algorithm to see its explanation.
+        </p>
+
+        <h3>Time Complexity</h3>
+        <p id="timeComplexity">—</p>
+
+        <h3>Space Complexity</h3>
+        <p id="spaceComplexity">—</p>
+
+        <h3>Pseudocode</h3>
+        <pre id="pseudoCode"></pre>
+    </div>
+
+
+    <!-- ================= DS SECTION ================= -->
+    <div id="stackSection" class="ds-panel">
+        <h2>Stack Visualizer (LIFO)</h2>
+
+        <input type="text" id="stackValue" placeholder="Enter value">
+        <button onclick="pushStack()">Push</button>
+        <button onclick="popStack()">Pop</button>
+
+        <div id="stackContainer"></div>
+    </div>
+
+    <div id="queueSection" class="ds-panel">
+        <h2>Queue Visualizer (FIFO)</h2>
+
+        <input type="text" id="queueValue" placeholder="Enter value">
+        <button onclick="enqueue()">Enqueue</button>
+        <button onclick="dequeue()">Dequeue</button>
+
+        <div id="queueContainer"></div>
+    </div>
+
+    <div id="llSection" class="ds-panel">
+        <h2>Linked List Visualizer</h2>
+
+        <input type="text" id="llValue" placeholder="Enter value">
+        <button onclick="insertLL()">Insert</button>
+        <button onclick="deleteLL()">Delete</button>
+
+        <div id="llContainer"></div>
+    </div>
+
+    <div id="treeSection" class="ds-panel">
+        <h2>Binary Tree Visualizer</h2>
+
+        <input type="text" id="treeValue" placeholder="Enter value">
+        <button onclick="insertTree()">Insert</button>
+
+        <br><br>
+        <button onclick="traverse('inorder')">Inorder</button>
+        <button onclick="traverse('preorder')">Preorder</button>
+        <button onclick="traverse('postorder')">Postorder</button>
+
+        <canvas id="treeCanvas" width="700" height="300"></canvas>
+    </div>
+
+
+
+
+
+    <!-- ================= DATA FROM BACKEND ================= -->
     <script>
         const gridData = {{ grid|tojson }};
     </script>
 
+    <!-- ================= JS FILES ================= -->
     <script src="{{ url_for('static', filename='js/grid.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/graph.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/ds.js') }}"></script>
 
 </body>
 </html>
