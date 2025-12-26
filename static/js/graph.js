@@ -96,14 +96,24 @@ canvas.addEventListener("click", e => {
 function runPrim() {
     if (mode !== "graph") return;
 
+    const start = parseInt(
+        document.getElementById("mstStartNode").value
+    );
+
+    if (isNaN(start)) {
+        alert("Enter start node id for Prim's");
+        return;
+    }
+
     fetch("/run_prim", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ nodes, edges })
+        body: JSON.stringify({ nodes, edges, start })
     })
     .then(res => res.json())
     .then(data => animateMST(data.mst));
 }
+
 
 
 function animateMST(mstEdges) {

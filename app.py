@@ -184,7 +184,7 @@ def compare():
 
 
 # ---------------- GRAPHS ---------------- #
-def prim(nodes, edges):
+def prim(nodes, edges, start):
     import heapq
 
     adj = {i: [] for i in range(len(nodes))}
@@ -194,7 +194,7 @@ def prim(nodes, edges):
 
     visited = set()
     mst = []
-    pq = [(0, 0, -1)]  # (weight, node, parent)
+    pq = [(0, start, -1)]   # 👈 start node here
 
     while pq:
         w, node, parent = heapq.heappop(pq)
@@ -210,6 +210,7 @@ def prim(nodes, edges):
                 heapq.heappush(pq, (wt, nei, node))
 
     return mst
+
 
 
 class DSU:
@@ -259,15 +260,16 @@ def kruskal(nodes, edges):
 
 
 
-
 @app.route("/run_prim", methods=["POST"])
 def run_prim():
     data = request.json
     nodes = data["nodes"]
     edges = data["edges"]
+    start = int(data["start"])
 
-    mst = prim(nodes, edges)
+    mst = prim(nodes, edges, start)
     return jsonify({"mst": mst})
+
 
 @app.route("/run_kruskal", methods=["POST"])
 def run_kruskal():
@@ -335,4 +337,4 @@ if __name__ == "__main__":
         webbrowser.open_new("http://127.0.0.1:5000")
 
     threading.Timer(1.5, open_browser).start()
-    app.run(debug=True)
+    app.run(debug=False)

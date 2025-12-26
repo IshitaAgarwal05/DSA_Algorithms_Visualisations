@@ -61,21 +61,38 @@ let linkedList = [];
 
 function insertLL() {
     const value = document.getElementById("llValue").value;
-    if (value === "") return;
+    if (!value) return;
 
-    linkedList.push(value);   // insert at end
-    renderLL();
-    document.getElementById("llValue").value = "";
+    const container = document.getElementById("llContainer");
+
+    // Step 1: Create node visually (floating)
+    const newNode = document.createElement("div");
+    newNode.className = "ll-node temp-node";
+    newNode.innerText = value;
+    container.appendChild(newNode);
+
+    // Step 2: After delay, attach it
+    setTimeout(() => {
+        linkedList.push(value);
+        renderLL();
+    }, 800);
 }
+
 
 function deleteLL() {
     const value = document.getElementById("llValue").value;
-    if (value === "") return;
+    const index = linkedList.indexOf(value);
+    if (index === -1) return;
 
-    linkedList = linkedList.filter(v => v !== value);
-    renderLL();
-    document.getElementById("llValue").value = "";
+    const nodes = document.querySelectorAll(".ll-node");
+    nodes[index].classList.add("delete-node");
+
+    setTimeout(() => {
+        linkedList.splice(index, 1);
+        renderLL();
+    }, 800);
 }
+
 
 function renderLL() {
     const container = document.getElementById("llContainer");
@@ -90,24 +107,37 @@ function renderLL() {
         if (index < linkedList.length - 1) {
             const arrow = document.createElement("span");
             arrow.className = "ll-arrow";
-            arrow.innerHTML = "&#8594;"; // →
+            arrow.innerHTML = "→";   // pointer
             container.appendChild(arrow);
         }
     });
 }
+
 
 const treeCanvas = document.getElementById("treeCanvas");
 const tctx = treeCanvas.getContext("2d");
 
 let tree = [];
 
+function calculateTreePositions() {
+    const levelGap = 70;
+    tree.forEach((node, i) => {
+        const level = Math.floor(Math.log2(i + 1));
+        const index = i - (2 ** level - 1);
+        const nodesInLevel = 2 ** level;
+
+        node.x = (treeCanvas.width / (nodesInLevel + 1)) * (index + 1);
+        node.y = 40 + level * levelGap;
+    });
+}
+
 function insertTree() {
     const value = document.getElementById("treeValue").value;
-    if (value === "") return;
+    if (!value) return;
 
-    tree.push(value);   // level-order insert
+    tree.push({ value });
+    calculateTreePositions();
     drawTree();
-    document.getElementById("treeValue").value = "";
 }
 
 function drawTree(highlightIndex = -1) {
@@ -116,7 +146,7 @@ function drawTree(highlightIndex = -1) {
     const radius = 18;
     const levelGap = 70;
 
-    tree.forEach((val, i) => {
+    tree.forEach((node, i) => {
         const level = Math.floor(Math.log2(i + 1));
         const indexInLevel = i - (2 ** level - 1);
         const nodesInLevel = 2 ** level;
@@ -125,7 +155,7 @@ function drawTree(highlightIndex = -1) {
             (treeCanvas.width / (nodesInLevel + 1)) * (indexInLevel + 1);
         const y = 40 + level * levelGap;
 
-        // Draw edge
+        // -------- DRAW EDGE WITH POINTER ARROW --------
         if (i !== 0) {
             const parent = Math.floor((i - 1) / 2);
             const pLevel = Math.floor(Math.log2(parent + 1));
@@ -136,23 +166,45 @@ function drawTree(highlightIndex = -1) {
                 (treeCanvas.width / (pNodes + 1)) * (pIndex + 1);
             const py = 40 + pLevel * levelGap;
 
+            // main edge
             tctx.beginPath();
             tctx.moveTo(px, py);
             tctx.lineTo(x, y);
             tctx.strokeStyle = "#94a3b8";
+            tctx.lineWidth = 2;
             tctx.stroke();
+
+            // arrow head (pointer)
+            const angle = Math.atan2(y - py, x - px);
+            tctx.beginPath();
+            tctx.moveTo(
+                x - 10 * Math.cos(angle - 0.3),
+                y - 10 * Math.sin(angle - 0.3)
+            );
+            tctx.lineTo(x, y);
+            tctx.lineTo(
+                x - 10 * Math.cos(angle + 0.3),
+                y - 10 * Math.sin(angle + 0.3)
+            );
+            tctx.fillStyle = "#94a3b8";
+            tctx.fill();
         }
 
-        // Draw node
+        // -------- DRAW NODE --------
         tctx.beginPath();
         tctx.arc(x, y, radius, 0, Math.PI * 2);
-        tctx.fillStyle = (i === highlightIndex) ? "#facc15" : "#38bdf8";
+        tctx.fillStyle =
+            i === highlightIndex ? "#facc15" : "#38bdf8";
         tctx.fill();
         tctx.strokeStyle = "#0f172a";
         tctx.stroke();
 
+        // -------- DRAW VALUE --------
         tctx.fillStyle = "black";
-        tctx.fillText(val, x - 6, y + 4);
+        tctx.font = "14px Arial";
+        tctx.textAlign = "center";
+        tctx.textBaseline = "middle";
+        tctx.fillText(node.value, x, y);
     });
 }
 
@@ -187,6 +239,7 @@ function traverse(type) {
     animateTraversal(order);
 }
 
+
 function traverse(type) {
     let order = [];
 
@@ -215,5 +268,162 @@ function traverse(type) {
     if (type === "preorder") preorder(0);
     if (type === "postorder") postorder(0);
 
+    // 🔥 FULL SEQUENCE (static)
+    const sequence = order.map(i => tree[i].value).join(" → ");
+    document.getElementById("treeSequence").innerText =
+        `Traversal Order: ${sequence}`;
+
     animateTraversal(order);
+}
+
+
+
+function animateTraversal(order) {
+    let i = 0;
+
+    function step() {
+        if (i >= order.length) return;
+
+        drawTree(order[i]);   // highlight current node
+        updateTreeExplain(order[i]);  // 👈 explanation text
+
+        i++;
+        setTimeout(step, 900);
+    }
+
+    step();
+}
+
+function updateTreeExplain(index) {
+    document.getElementById("treeExplain").innerText =
+        `Visiting node ${tree[index].value}`;
+}
+
+
+
+
+
+// -------------------------HEAP-------------------------
+let heap = [];
+let heapType = "min"; // or "max"
+
+function insertHeapUI() {
+    const value = parseInt(document.getElementById("heapValue").value);
+    heapType = document.getElementById("heapType").value;
+    if (isNaN(value)) return;
+
+    insertHeap(value);
+    document.getElementById("heapValue").value = "";
+}
+
+function extractRootUI() {
+    heapType = document.getElementById("heapType").value;
+    extractRoot();
+}
+
+
+function insertHeap(value) {
+    heap.push(value);
+    heapifyUp(heap.length - 1);
+    drawHeap();
+}
+
+function extractRoot() {
+    if (heap.length === 0) return;
+    heap[0] = heap.pop();
+    heapifyDown(0);
+    drawHeap();
+}
+
+function heapifyUp(i) {
+    if (i === 0) return;
+    const parent = Math.floor((i - 1) / 2);
+
+    if (
+        (heapType === "min" && heap[i] < heap[parent]) ||
+        (heapType === "max" && heap[i] > heap[parent])
+    ) {
+        [heap[i], heap[parent]] = [heap[parent], heap[i]];
+        heapifyUp(parent);
+    }
+}
+
+
+function heapifyDown(i) {
+    let left = 2*i + 1;
+    let right = 2*i + 2;
+    let target = i;
+
+    if (left < heap.length &&
+        ((heapType === "min" && heap[left] < heap[target]) ||
+         (heapType === "max" && heap[left] > heap[target])))
+        target = left;
+
+    if (right < heap.length &&
+        ((heapType === "min" && heap[right] < heap[target]) ||
+         (heapType === "max" && heap[right] > heap[target])))
+        target = right;
+
+    if (target !== i) {
+        [heap[i], heap[target]] = [heap[target], heap[i]];
+        heapifyDown(target);
+    }
+}
+
+const heapCanvas = document.getElementById("heapCanvas");
+const hctx = heapCanvas.getContext("2d");
+
+function drawHeap() {
+    hctx.clearRect(0, 0, heapCanvas.width, heapCanvas.height);
+
+    const levelGap = 70;
+    const radius = 18;
+
+    heap.forEach((val, i) => {
+        const level = Math.floor(Math.log2(i + 1));
+        const index = i - (2 ** level - 1);
+        const nodesInLevel = 2 ** level;
+
+        const x = (heapCanvas.width / (nodesInLevel + 1)) * (index + 1);
+        const y = 40 + level * levelGap;
+
+        // draw edge
+        if (i !== 0) {
+            const parent = Math.floor((i - 1) / 2);
+            const pLevel = Math.floor(Math.log2(parent + 1));
+            const pIndex = parent - (2 ** pLevel - 1);
+            const pNodes = 2 ** pLevel;
+
+            const px = (heapCanvas.width / (pNodes + 1)) * (pIndex + 1);
+            const py = 40 + pLevel * levelGap;
+
+            hctx.beginPath();
+            hctx.moveTo(px, py);
+            hctx.lineTo(x, y);
+            hctx.strokeStyle = "#94a3b8";
+            hctx.stroke();
+
+            // arrow
+            const angle = Math.atan2(y - py, x - px);
+            hctx.beginPath();
+            hctx.moveTo(x - 10 * Math.cos(angle - 0.3), y - 10 * Math.sin(angle - 0.3));
+            hctx.lineTo(x, y);
+            hctx.lineTo(x - 10 * Math.cos(angle + 0.3), y - 10 * Math.sin(angle + 0.3));
+            hctx.fillStyle = "#94a3b8";
+            hctx.fill();
+        }
+
+        // draw node
+        hctx.beginPath();
+        hctx.arc(x, y, radius, 0, Math.PI * 2);
+        hctx.fillStyle = "#38bdf8";
+        hctx.fill();
+        hctx.stroke();
+
+        hctx.fillStyle = "black";
+        hctx.fillText(heap[i], x - 6, y + 4);
+    });
+
+    document.getElementById("heapExplain").innerText =
+        `${heapType.toUpperCase()} Heap: Root = ${heap[0] ?? "-"}`;
 }

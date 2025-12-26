@@ -32,9 +32,14 @@
         <button onclick="runAlgorithm()">Run</button>
         <button onclick="compareAlgorithms()">Compare All</button>
 
-        <button onclick="runPrim()">Run Prim</button>
-        <button onclick="runKruskal()">Run Kruskal</button>
-
+        <div id="graphControls" style="display:none;">
+            <input
+                type="number"
+                id="mstStartNode"
+                placeholder="Start Node (id)"
+                style="width:140px"
+            />
+        </div>
 
         <button onclick="resetGrid()">Reset</button>
     </div>
@@ -42,6 +47,12 @@
 
     <!-- ================= GRID MODE ================= -->
     <div class="grid-container" id="grid"></div>
+    <div id="legend" class="legend">
+        <span class="bfs">■ BFS</span>
+        <span class="dfs">■ DFS</span>
+        <span class="dijkstra">■ Dijkstra</span>
+        <span class="astar">■ A*</span>
+    </div>
 
     <!-- ================= GRAPH MODE ================= -->
     <canvas id="graphCanvas"
@@ -112,8 +123,26 @@
         <button onclick="traverse('postorder')">Postorder</button>
 
         <canvas id="treeCanvas" width="700" height="300"></canvas>
+        <p id="treeExplain" style="margin-top: 10px; color: #e5e7eb;"></p>
+        <p id="treeSequence" style="margin-top: 5px; color:#a5b4fc;"></p>
     </div>
 
+    <div id="heapSection" class="ds-panel">
+        <h2>Heap Visualizer</h2>
+
+        <select id="heapType">
+            <option value="min">Min Heap</option>
+            <option value="max">Max Heap</option>
+        </select>
+
+        <input type="number" id="heapValue" placeholder="Enter value">
+        <button onclick="insertHeapUI()">Insert</button>
+        <button onclick="extractRootUI()">Extract Root</button>
+
+        <canvas id="heapCanvas" width="700" height="300"></canvas>
+
+        <p id="heapExplain"></p>
+    </div>
 
 
 

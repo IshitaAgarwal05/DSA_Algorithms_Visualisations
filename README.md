@@ -68,31 +68,24 @@ dsa-algorithm-visualizer/
 ---
 
 ## ▶️ How to Run Locally
-
-1. Clone the repository
+ 
    ```bash
-   git clone https://github.com/IshitaAgarwal05/DSA_Algorithms_Visualisations.git
+  git clone https://github.com/IshitaAgarwal05/DSA_Algorithms_Visualisations.git      # Clone the repository
+  cd dsa-algorithm-visualizer    # Navigate to project directory
+  pip install flask     # Install Flask
+  python app.py         # Run the application
+  http://127.0.0.1:5000           # Open browser and visit
   ```
 
-2. Navigate to the project directory
-  ```bash
-  cd dsa-algorithm-visualizer
-  ```
+## How Does It look?
+### 🔹 Grid Pathfinding (Dijkstra, BFS, DFS, A*)
+![Grid Pathfinding](static/assets/demo1.png)
 
-3. Install Flask
-  ```bash
-  pip install flask
-  ```
+### 🔹 Binary Tree Visualisation
+![Binary Tree](static/assets/demo2.png)
 
-4. Run the application
-  ```bash
-  python app.py
-  ```
-
-5. Open browser and go to:
-  ```bash
-  http://127.0.0.1:5000
-  ```
+### 🔹 Stack Visualisation
+![Stack](static/assets/demo3.png)
 
 ## Academic Relevance
 This project demonstrates:

@@ -71,6 +71,32 @@ const algoInfo = {
 f(n) = g(n) + h(n)
 Use priority queue ordered by f(n)
 `
+    },
+
+    prim: {
+        title: "Prim’s Algorithm (Minimum Spanning Tree)",
+        desc: "Prim’s algorithm builds a Minimum Spanning Tree by starting from a node and repeatedly adding the minimum-weight edge that connects a new vertex.",
+        time: "O(E log V)",
+        space: "O(V)",
+        pseudo: `
+    1. Start with any vertex
+    2. Add it to MST set
+    3. Pick minimum weight edge connecting MST to non-MST vertex
+    4. Repeat until all vertices are included
+    `
+    },
+
+    kruskal: {
+        title: "Kruskal’s Algorithm (Minimum Spanning Tree)",
+        desc: "Kruskal’s algorithm builds MST by sorting all edges and adding them one by one while avoiding cycles using DSU.",
+        time: "O(E log E)",
+        space: "O(V)",
+        pseudo: `
+    1. Sort all edges by weight
+    2. Initialize DSU
+    3. For each edge:
+    - If it does not form a cycle, add to MST
+    `
     }
 };
 
@@ -99,7 +125,10 @@ function switchMode() {
     document.getElementById("graphCanvas").style.display =
         mode === "graph" ? "block" : "none";
 
-    populateAlgorithms(mode);   // 🔥 key line
+    document.getElementById("graphControls").style.display =
+        mode === "graph" ? "inline-flex" : "none";
+
+    populateAlgorithms(mode);   
     resetGrid();
 }
 
@@ -147,6 +176,7 @@ function animateResult(visited, path) {
             setTimeout(() => {
                 document.querySelectorAll(".cell").forEach(cell => {
                     if (+cell.dataset.row === r && +cell.dataset.col === c) {
+                        cell.classList.remove("visited");
                         cell.classList.add("path");
                     }
                 });
@@ -159,6 +189,7 @@ function animateResult(visited, path) {
 function resetGrid() {
     start = null;
     goal = null;
+    document.getElementById("legend").style.display = "none";
     createGrid();
 }
 
@@ -197,6 +228,7 @@ function compareAlgorithms() {
     })
     .then(res => res.json())
     .then(data => drawComparison(data));
+    document.getElementById("legend").style.display = "flex";
 }
 
 
